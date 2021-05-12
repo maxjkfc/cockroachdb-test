@@ -39,6 +39,10 @@ services:
       roachnet:
         aliases:
           - roach3 
+    ports:
+      - target: 26257
+        published: 26258
+        protocol: tcp
     volumes:
       - type: volume
         source: roach3-volumes
