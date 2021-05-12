@@ -1,0 +1,54 @@
+version: '3.5'
+services:
+  roach1:
+    image: cockroachdb/cockroach:v20.2.9
+    networks:
+      roachnet:
+        aliases:
+          - roach1
+    ports:
+      - target: 26257
+        published: 26257
+        protocol: tcp
+      - target: 8080
+        published: 8080
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: roach1-volumes
+        target: /cockroach/cockroach-data
+        volume:
+          nocopy: true
+    command: start --insecure --join=roach1,roach2,roach3
+  roach2:
+    image: cockroachdb/cockroach:v20.2.9
+    networks:
+      roachnet:
+        aliases:
+          - roach2
+    volumes:
+      - type: volume
+        source: roach2-volumes
+        target: /cockroach/cockroach-data
+        volume:
+          nocopy: true
+    command: start --insecure --join=roach1,roach2,roach3
+  roach3:
+    image: cockroachdb/cockroach:v20.2.9
+    networks:
+      roachnet:
+        aliases:
+          - roach3 
+    volumes:
+      - type: volume
+        source: roach3-volumes
+        target: /cockroach/cockroach-data
+        volume:
+          nocopy: true
+    command: start --insecure --join=roach1,roach2,roach3
+volumes:
+  roach1-volumes:
+  roach2-volumes:
+  roach3-volumes:
+networks:
+  roachnet:
