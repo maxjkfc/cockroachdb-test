@@ -9,6 +9,6 @@ import (
 type Record struct {
 	ID        string            `db:"id,omitempty"`
 	UserInfo  cockroachdb.JSONB `db:"user_info"`
-	Tags      []string          `db:"tags"`
+	Tag       string            `db:"tag"`
 	CreatedAt time.Time         `db:"createdat"`
 }

@@ -4,7 +4,7 @@ import "time"
 
 type Record struct {
 	User      User      `json:"user"`
-	Tags      []string  `json:"tags"`
+	Tag       string    `json:"tag"`
 	CreatedAt time.Time `json:"created_at"`
 }
 

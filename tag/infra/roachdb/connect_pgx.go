@@ -3,15 +3,12 @@ package roachdb
 import (
 	"context"
 	"log"
+	"time"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-type pgxDatabase struct {
-	con *pgx.Conn
-}
-
-func NewWithPgx(host, database, user, password string) {
+func NewWithPgx(host, database, user, password string) (*pgxpool.Pool, error) {
 
 	url := "postgres://"
 
@@ -32,17 +29,19 @@ func NewWithPgx(host, database, user, password string) {
 
 	url += "?sslmode=disable"
 
-	config, err := pgx.ParseConfig(url)
+	config, err := pgxpool.ParseConfig(url)
 	if err != nil {
 		panic(err)
 	}
 
-	_ = config
+	config.MaxConnIdleTime = time.Second * 60
+	config.MaxConns = 10
+	config.MinConns = 3
 
-	conn, err := pgx.ConnectConfig(context.Background(), config)
+	conn, err := pgxpool.ConnectConfig(context.Background(), config)
 	if err != nil {
 		log.Fatal("connect failed")
 	}
 
-	_ = conn
+	return conn, err
 }

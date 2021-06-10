@@ -1,6 +1,8 @@
 package roachdb
 
 import (
+	"time"
+
 	"github.com/upper/db/v4"
 	"github.com/upper/db/v4/adapter/cockroachdb"
 )
@@ -26,6 +28,10 @@ func NewWithUpper(host, database, user, password string) (db.Session, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	session.SetMaxOpenConns(10)
+	session.SetConnMaxLifetime(60 * time.Second)
+	session.SetMaxIdleConns(3)
 
 	return session, nil
 }
